@@ -1,0 +1,56 @@
+---
+title: "Map of Eastern Europe"
+author: "William Soondergaard Slipsager"
+date: "9/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Library}
+library(leaflet)
+library(tidyverse)
+library(htmlwidgets)
+library(tidygeocoder)
+library(readr)
+library(dplyr)
+```
+
+## Map Product
+
+```{r Final Map, echo=FALSE}
+
+Map_for_exam <- read.csv2("C:/Users/deadp/Documents/Finalproject/DATASET/Map_for_exam2.csv", 
+                            dec = ".",
+                            encoding = "UTF-8")
+
+
+Cities <- leaflet(Map_for_exam) %>% 
+  addTiles() %>% 
+  addMarkers(group = Map_for_exam$Filter,
+            lng = Map_for_exam$Longitude,
+             lat = Map_for_exam$Latitude,
+             popup=paste(
+               "<b>Current Name:</b>", Map_for_exam$X.U.FEFF.Current_name, "<br>",        
+               "<b>Former Name:</b>", Map_for_exam$Former_name, "<br>",
+               "<b>Year of current name change:</b>", Map_for_exam$Date_of_current_name_change, "<br>",
+               "<b>Cause of Name Change:</b>", Map_for_exam$Reason_for_Name_change, "<br>")) %>% 
+  setView(19.7876161, 50.032343, zoom = 4) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLayersControl(
+    
+    overlayGroups = c("Name Change: Post World War 1",
+                      "Name Change: Communism",
+                      "Name Change: Post World War 2",
+                      "Name Change: De-Stalinization", 
+                      "Name Change: Post Communist",
+                      "Name Change: Referendum"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+Cities
+```
+
+
